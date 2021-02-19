@@ -8,20 +8,22 @@
 
 # bash
 ```bash
-GOOS=linux GOARCH=amd64 go build -o main .
+GOPROXY=https://goproxy.cn GOOS=linux GOARCH=amd64 go build -o main .
 zip main.zip main
 ```
 
 # cmd
 ```bash
+set GOPROXY=https://goproxy.cn
 set GOOS=linux
 set GOARCH=amd64
 go build -o main .
 ```
 # powershell
 ```bash
-$env:GOOS=linux
-$env:GOARCH=amd64
+$env:GOPROXY='https://goproxy.cn'
+$env:GOOS='linux'
+$env:GOARCH='amd64'
 go build -o main .
 ```
 

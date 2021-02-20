@@ -9,9 +9,10 @@ from urllib import parse
 
 import requests
 
-Skey = ""       # 酷推 skey
-Cookie = ""     # 抓包Cookie 存在引号时 请使用 \ 转义
-Referer = ""    # 抓包referer
+OpenLuckDraw = False  # 是否开启自动幸运抽奖(首次免费, 第二次5积分/次) 不建议开启 否则会导致多次执行时消耗积分
+Skey = ""  # 酷推 skey
+Cookie = ""  # 抓包Cookie 存在引号时 请使用 \ 转义
+Referer = ""  # 抓包referer
 UA = "Mozilla/5.0 (Linux; Android 10; M2007J3SC Build/QKQ1.191222.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36 MCloudApp/7.6.0"
 
 
@@ -61,7 +62,46 @@ def getTicket():
     return resp['data']
 
 
-# key 参数是推送的 key 可能是酷推的也可能是Server酱的 这里通过输入框由平台自动填入
+def luckDraw():
+    target = "http://caiyun.feixin.10086.cn:7070/portal/ajax/common/caiYunSignIn.action"
+    headers = {
+        "Host": "caiyun.feixin.10086.cn:7070",
+        "Accept": "*/*",
+        "X-Requested-With": "XMLHttpRequest",
+        "User-Agent": UA,
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Origin": "http://caiyun.feixin.10086.cn:7070",
+        "Referer": Referer,
+        "Accept-Encoding": "gzip, deflate",
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+        "Cookie": Cookie,
+    }
+    payload = parse.urlencode({
+        "op": "luckDraw",
+        "data": getTicket()
+    })
+
+    resp = json.loads(requests.post(target, headers=headers, data=payload).text)
+
+    if resp['code'] != 10000:
+        print('自动抽奖失败: ', resp['msg'])
+        return '自动抽奖失败: ' + resp['msg']
+    if resp['result'][type] == 40160:
+        return '自动抽奖成功: 小狗电器小型手持床铺除螨仪'
+    elif resp['result'][type] == 40175:
+        return '自动抽奖成功: 飞科男士剃须刀'
+    elif resp['result'][type] == 40120:
+        return '自动抽奖成功: 京东京造电动牙刷'
+    elif resp['result'][type] == 40140:
+        return '自动抽奖成功: 10-100M随机长期存储空间'
+    elif resp['result'][type] == 40165:
+        return '自动抽奖成功: 夏新蓝牙耳机'
+    elif resp['result'][type] == 40170:
+        return '自动抽奖成功: 欧莱雅葡萄籽护肤套餐'
+    else:
+        return '自动抽奖成功: 谢谢参与'
+
+
 def run():
     target = "http://caiyun.feixin.10086.cn:7070/portal/ajax/common/caiYunSignIn.action"
     headers = {
@@ -78,20 +118,20 @@ def run():
     }
 
     ticket = getTicket()
-    print('ticket: ', ticket)
     payload = parse.urlencode({
         "op": "receive",
         "data": ticket,
     })
 
-    print('raw payload: ', payload)
-
     resp = json.loads(requests.post(target, headers=headers, data=payload).text)
     if resp['code'] != 10000:
         push('和彩云签到', '失败:' + resp['msg'])
     else:
-        push('和彩云签到', '签到成功\n月签到天数:' +
-             str(resp['result']['monthDays']) + '\n总积分:' + str(resp['result']['totalPoints']))
+        content = '签到成功\n月签到天数:' + str(resp['result']['monthDays']) + '\n总积分:' + str(
+            resp['result']['totalPoints'])
+        if OpenLuckDraw:
+            content += '\n\n' + luckDraw()
+        push('和彩云签到', content)
 
 
 def main_handler(event, context):

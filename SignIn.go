@@ -118,9 +118,6 @@ func signIn() (*SignInResponse, error) {
 	return &resp, err
 }
 
-//RSA加密
-// plainText 要加密的数据
-// path 公钥匙文件地址
 func RSAEncrypt(plainText []byte) []byte {
 	var publicKey = []byte(`-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCJ6kiv4v8ZcbDiMmyTKvGzxoPR3fTLj/uRuu6dUypy6zDW+EerThAYON172YigluzKslU1PD9+PzPPHLU/cv81q6KYdT+B5w29hlKkk5tNR0PcCAM/aRUQZu9abnl2aAFQow576BRvIS460urnju+Bu1ZtV+oFM+yQu04OSnmOpwIDAQAB

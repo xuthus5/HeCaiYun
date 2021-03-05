@@ -86,20 +86,21 @@ def luckDraw():
     if resp['code'] != 10000:
         print('自动抽奖失败: ', resp['msg'])
         return '自动抽奖失败: ' + resp['msg']
-    if resp['result']['type'] == 40160:
-        return '自动抽奖成功: 小狗电器小型手持床铺除螨仪'
-    elif resp['result']['type'] == 40175:
-        return '自动抽奖成功: 飞科男士剃须刀'
-    elif resp['result']['type'] == 40120:
-        return '自动抽奖成功: 京东京造电动牙刷'
-    elif resp['result']['type'] == 40140:
-        return '自动抽奖成功: 10-100M随机长期存储空间'
-    elif resp['result']['type'] == 40165:
-        return '自动抽奖成功: 夏新蓝牙耳机'
-    elif resp['result']['type'] == 40170:
-        return '自动抽奖成功: 欧莱雅葡萄籽护肤套餐'
     else:
-        return '自动抽奖成功: 谢谢参与'
+        if resp['result']['type'] == '40160':
+            return '自动抽奖成功: 小狗电器小型手持床铺除螨仪'
+        elif resp['result']['type'] == '40175':
+            return '自动抽奖成功: 飞科男士剃须刀'
+        elif resp['result']['type'] == '40120':
+            return '自动抽奖成功: 京东京造电动牙刷'
+        elif resp['result']['type'] == '40140':
+            return '自动抽奖成功: 10-100M随机长期存储空间'
+        elif resp['result']['type'] == '40165':
+            return '自动抽奖成功: 夏新蓝牙耳机'
+        elif resp['result']['type'] == '40170':
+            return '自动抽奖成功: 欧莱雅葡萄籽护肤套餐'
+        else:
+            return '自动抽奖成功: 谢谢参与'
 
 
 def run():

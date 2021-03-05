@@ -50,7 +50,7 @@ def getEncryptTime():
 
 
 def getTicket():
-    target = "https://hecaiyun.vercel.app/api/calc_sign"
+    target = "https://proxy.xuthus.cc/api/10086_calc_sign"
     payload = {
         "sourceId": 1003,
         "type": 1,
